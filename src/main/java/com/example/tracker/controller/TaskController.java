@@ -29,7 +29,7 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> tasks(@RequestParam(name = "complete") String isDone) {
+    public ResponseEntity<List<Task>> tasks(@RequestParam(name = "complete", required = false) String isDone) {
         if (isDone == null)
             return ResponseEntity.status(HttpStatus.OK).body(taskService.taskList());
         else
