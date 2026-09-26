@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorObject> exceptions(Throwable exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorObject.builder()
-                .statusCode(HttpStatus.NOT_FOUND.value())
+                .statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
                 .message(exception.getMessage())
                 .errorTime(LocalDateTime.now())
                 .build());

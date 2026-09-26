@@ -1,48 +1,69 @@
 package com.example.tracker.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.tracker.exceptions.TaskException;
 import com.example.tracker.model.Task;
+import com.example.tracker.model.TaskPage;
 import com.example.tracker.repository.TaskRepo;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepo taskRepo;
 
-    public TaskService(TaskRepo taskRepo) {
-        this.taskRepo = taskRepo;
+    public Task getById(int id) {
+        return taskRepo.findById(id).orElseThrow(() -> new TaskException("Task Not Found"));
     }
 
-    public Task createTask(Task task) throws TaskException {
-        return taskRepo.addTask(task);
+    public Task createTask(Task task) {
+        return taskRepo.save(task);
     }
 
-    public List<Task> taskList() throws TaskException {
-        return taskRepo.getTasks();
+    public Task updateTask(int id, Task task) {
+        Task t = taskRepo.findById(id).orElseThrow(() -> new TaskException("Task Not Found"));
+        t.setTitle(task.getTitle());
+        t.setDescription(task.getDescription());
+        t.setDone(task.isDone());
+        taskRepo.save(t);
+        return t;
     }
 
-    public List<Task> getAllDoneTasks(boolean isDone) throws TaskException {
-        System.out.println(isDone);
-        return taskRepo.findAllByIsDone(isDone);
+    public Task updateTaskStatus(int id) {
+        Task task = taskRepo.findById(id).orElseThrow(() -> new TaskException("Task Not Found"));
+        task.setDone(!task.isDone());
+        taskRepo.save(task);
+        return task;
     }
 
-    public Task updateTask(int id, Task task) throws TaskException {
-        return taskRepo.Update(id, task);
+    public TaskPage getAllTask(int pageNum, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Task> page = taskRepo.findAll(pageable);
+        return TaskPage.builder()
+                .tasks(page.getContent())
+                .pageNum(page.getNumber())
+                .pageSize(page.getSize())
+                .build();
     }
 
-    public Task updateStatus(int id) throws TaskException {
-        return taskRepo.updateStatus(id);
+    public TaskPage getAllTaskByDone(boolean isDone, int pageNum, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        Page<Task> page = taskRepo.findByIsDone(isDone, pageable);
+        return TaskPage.builder()
+                .tasks(page.getContent())
+                .pageNum(page.getNumber())
+                .pageSize(page.getSize())
+                .build();
     }
 
-    public String delete(int id) throws TaskException {
-        return taskRepo.deleteById(id);
-    }
-
-    public Task getById(int id) throws TaskException {
-        return taskRepo.findById(id);
+    public String deleteTask(int id){
+        taskRepo.delete(taskRepo.findById(id).orElseThrow(()-> new TaskException("Task Not Found")));
+        return "Delete Task!";
     }
 }
