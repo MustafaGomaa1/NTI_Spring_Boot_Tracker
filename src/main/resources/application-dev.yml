@@ -1,0 +1,20 @@
+server:
+    port: 8090
+
+task:
+    name: mustafa
+    age: 24
+
+logging:
+    level:
+        com.example.tracker: DEBUG
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health, info, metrics
+info:
+    app:    
+        name: tracker  
+        version: 1.0.0
