@@ -9,7 +9,9 @@ spring:
         hibernate:
             ddl-auto: update
         show-sql: true
-
+    devtools:
+        livereload:
+            enabled: true
     profiles:
         active: dev
 

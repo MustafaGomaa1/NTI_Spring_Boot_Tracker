@@ -2,8 +2,8 @@ server:
     port: 8090
 
 task:
-    name: mustafa
-    age: 24
+    name: hamada
+    age: 25
 
 logging:
     level:
@@ -14,7 +14,3 @@ management:
         web:
             exposure:
                 include: health, info, metrics
-info:
-    app:    
-        name: tracker  
-        version: 1.0.0

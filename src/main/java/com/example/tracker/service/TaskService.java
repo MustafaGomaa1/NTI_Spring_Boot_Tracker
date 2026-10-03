@@ -62,8 +62,8 @@ public class TaskService {
                 .build();
     }
 
-    public String deleteTask(int id){
-        taskRepo.delete(taskRepo.findById(id).orElseThrow(()-> new TaskException("Task Not Found")));
+    public String deleteTask(int id) {
+        taskRepo.delete(taskRepo.findById(id).orElseThrow(() -> new TaskException("Task Not Found")));
         return "Delete Task!";
     }
 }
